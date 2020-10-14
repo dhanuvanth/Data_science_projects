@@ -1,0 +1,376 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+<style>
+#card1,#card2,#card3,#card4{
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  padding-bottom:10px;
+  height:360px;
+}
+.card-body h5{
+  color:#0088cc;
+}
+#chart_div{
+  width:400px;
+}
+@media print {
+   #but{
+     display:none;
+   }
+   #sidebar,#bpch,.btn,.img-responsive,.fa{
+    display:none;
+   }
+}
+@media screen and (max-width:580px){
+  .lead,p{
+    font-size:0.8rem;
+    
+  }
+  #di1{
+    width: 120px;
+  }
+  #population-chart{
+    display: block;
+    height:350px;
+    width:328px;
+  }
+}
+
+</style>
+<script type="text/javascript" src="{% static 'js/loader.js' %}"></script>
+   <script type="text/javascript">
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+        var ai={{aivalue}};
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Lungs',ai],
+        ]);
+
+        var options = {
+          width: 400, height: 150,
+          redFrom:50, redTo:100,
+          greenFrom:0, greenTo:49,
+          minorTicks: 5
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  <script src="{% static 'js/chart.js' %}"></script>
+  <script>
+
+    $(function () {
+
+      var $population = $("#population-chart");
+      $.ajax({
+        url: $population.data("url"),
+        success: function (data) {
+
+          var ctx = $population[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'oxygen',
+                backgroundColor: 'yellow',
+                borderColor:'yellow',
+                fill: false,
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Spo2'
+              },
+               scales: {
+            xAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return;
+                    }
+                }
+            }]
+        }
+            }
+          });
+          /*for(var i=0;i<10;i++)
+          {
+          var html = '<tr>';
+          html += '<td>'+data.labels[i]+'</td>';
+          html += '<td>'+data.date[i]+'</td></tr>';
+          $('#table_data').append(html);
+          }*/
+        }
+
+      });
+
+    });
+
+  </script>
+  <script>
+
+    $(function () {
+
+      var $heartchart = $("#heartrate-chart");
+      $.ajax({
+        url: $heartchart.data("url"),
+        success: function (data) {
+
+          var ctx = $heartchart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'pulse level',
+                backgroundColor: 'black',
+                borderColor:'black',
+                fill: false,
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'pulse'
+              },
+               scales: {
+            xAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return;
+                    }
+                }
+            }]
+        }
+            }
+          });
+
+        }
+      });
+
+    });
+
+  </script>
+  <script>
+
+    $(function () {
+
+      var $respiratory = $("#respiratory-chart");
+      $.ajax({
+        url: $respiratory.data("url"),
+        success: function (data) {
+
+          var ctx = $respiratory[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'Respiratory level',
+                backgroundColor: 'red',
+                borderColor:'red',
+                fill: false,
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Respiratory Rate'
+              },
+               scales: {
+            xAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return;
+                    }
+                }
+            }]
+        }
+            }
+          });
+
+        }
+      });
+
+    });
+
+  </script>
+ <div class="col-sm-12" style="padding-bottom: 0px;padding-top:10px;">
+  <p style="color:black; font-family:Arial Bold; font-size:100%; font-weight: bold; text-align:left;">
+  {% for pdata in pdata %}
+    <p><b>Name:</b> {{pdata.fname}} {{pdata.lname}}<br>
+    {% if gender %}
+    <b>Gender:</b> {{gender}}<br>
+    {% else %}
+        <b>Gender:</b> {{pdata.sex}}<br>
+    {% endif %}
+    {% endfor %}
+   <b>Age:</b> {{age}}</p>
+  </div>
+<div class="container-fluid" id="pri" style="padding-left: 10px;padding-right: 10px; padding-bottom:10px;">
+<br>
+<div class="container-fluid row" style="
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+">
+    <div class="container-fluid col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding-left: 0px;padding-right: 0px;padding-bottom:10px;">
+    <div class="card" id="card1" >
+      <div class="card-body">
+        <h5 class="card-title" >PULSEOXY Meter</h5>
+        <div class="t-speedometer" style="background-size:200% 200%;">
+        <center> <div id="chart_div" style="height: 120px;"></div></center><br>
+        <span id="gauge1-txt"></span></center></div>
+        <br>
+			{% if aivalue < 50 %}
+                {% for mete in mete %}
+					<p> Based on the information entered, your lung function is within an acceptable range. 
+                     Oxygen level in your blood is {{mete.spo2}}
+                     {% endfor %}
+		</p>
+		{% else %}
+			<p>Based on the entered information, your lung function is not within an acceptable range. Please consult a doctor.
+             {% for mete in mete %}
+                    Your Oxygen level in your blood is {{mete.spo2}}
+                     {% endfor %}
+		</p>
+        {% endif %}
+        {% for meter in meter %}
+			<p align="right"><i> Last checked- {{meter.result_date}}</i></p>
+        {% endfor %}
+      </div>
+
+    </div>
+</div>
+    <br>
+<div class="container-fluid col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding-left: 0px;padding-right: 0px;padding-bottom:10px;">
+ <div class="card" id="card3">
+      <div class="card-body" id="graph" style="
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 10px;
+">
+     <canvas id="population-chart" class="container-fluid" data-url="{% url 'population-chart' pid=paid %}"></canvas>
+</div>
+</div>
+</div>
+<div class="container-fluid row" style="
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: 0px;
+">
+<div class="container-fluid col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding-left: 0px;padding-right: 0px;padding-bottom:10px;">
+ <div class="card" id="card4">
+      <div class="card-body" id="graph" style="
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 10px;
+">
+     <canvas id="heartrate-chart" data-url="{% url 'heartrate-chart' pid=paid %}"></canvas>
+</div>
+</div>
+</div>
+<div class="container-fluid col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding-left: 0px;padding-right: 0px;padding-bottom:10px;">
+ <div class="card" id="card3">
+      <div class="card-body"  style="
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 10px;
+">
+     <canvas id="respiratory-chart" data-url="{% url 'respiratory-chart' pid=paid %}"></canvas>
+     <div  class="form-group col-lg-4 col-md-4 col-xs-6 col-sm-6" style="padding-top:10px;">
+     <button class=" btn btn-sm btn-dark" style="position:bottom-right;" type="button" onclick="location.href='{% url 'pulsoxyHistory' pid=paid %}'"><b>See History</b></button>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+
+</div>
+ </div>
+ <!-- <center><button type="button"  class="form-group  btn btn-sm btn-danger" onclick="toggle_display()">click here to see the Dates</button>
+      <div id="showhide" style="display:none;">
+      <table class="table table-striped table-bordered" id="ttab">
+        <thead>
+        <tr>
+          <th>No</th>
+          <th>Date</th>
+        </tr>
+        </thead>
+        <tbody id="table_data">
+
+        </tbody>
+      </table>
+      </div></center>-->
+ <script>
+  /*function toggle_display(){
+    var x = document.getElementById("showhide");
+
+    if (x.style.display 
+      === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = 
+  "none";
+  }
+  }*/
+</script>
+ <div class="container-fluid col-lg-12 col-md-12 col-xs-12 col-sm-12" style="padding-left: 0px;padding-right: 0px;padding-bottom:10px;">
+ <div class="card">
+      <div class="card-body" id="declaimer">
+	  <p>Disclaimer: <i class="blockquote-footer">The contents of the Mydoctorspot website or mobile application , such as text, graphics, images, and other materials created by Mydoctorspot, and other materials contained on the DOCTORSPOT Site (collectively, "Content") are for informational purposes only. The Content is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on the Mydoctorspot Site!</i></p>
+
+</div>
+</div>
+</div>
+	</div>
+<div class="container-fluid">
+    <h2>About All Meters</h2>
+    <ol>
+<li>Symptoms meter - The first stage of identification should be with the symptoms of the user.</li>
+
+<li>Infection meter shows the severity of infections with historical and predictive graphical representations. (Strips, Device & AI)</li>
+
+<li>Corona meter - After using symptoms and infection meter, we can finely confirm whether the user is infected or not and also the severity of infection levels. (High or low Corona).</li>
+
+<li> Organ Meter - The most important stage of identification for giving the correct treatment. Shows detailed status of following organs - Lungs, Kidney, Liver, Heart, etc. ( 25 AI, 10 Devices)</li>
+
+<li>We have associated 25 AI applications, 10 devices, several web and mobile applications to get the combined results for day to day monitoring of users.</li>
+</ol>
+</div>
+{% endblock %}

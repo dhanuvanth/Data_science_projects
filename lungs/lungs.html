@@ -1,0 +1,87 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid row" style="margin-left: 0px;padding-left: 0px;padding-right: 0px;margin-right: 0px;">
+<div class="container-fluid col-sm-12 col-md-6 col-lg-8 col-xs-12"
+ style="background-image:url({% static 'images/health.jpg' %});
+ background-color: rgba(174, 250, 148  ,0.4);
+ background-blend-mode: lighten;
+ background-repeat: no-repeat;
+ background-size:100% 100%;">
+<center>
+  <h1 style="padding-top:50%;color:#A5FA87; text-shadow: 1px 1px black;">
+    <hr style="background-color:white;">
+    <b>PULSE-OXYMETER</b>
+  </hr>
+</h1>
+<hr style="background-color:white;">
+<h4 style="padding-bottom:50%; color:white; text-shadow: 1px 1px black;"> 
+Check Your Lungs Status with our AI
+</h4>
+</center>
+</div>
+<div class="container col-sm-12 col-md-4 col-lg-4 col-xs-12" style="padding-top:30px; background: #ff9966;background: -webkit-linear-gradient(to right, #ff9966, #ff5e62);background: linear-gradient(to right, #D3F9C6, #B3F99B );">
+<form method="POST" enctype="multipart/form-data" action="/predictMPG">
+{% csrf_token %}
+<center><h3><b>Submit Your Informations</b></h3></center>
+{% for pdata in pdata %}
+<div class="form-group">
+    <label for="exampleName">Name</label>
+    <input type="text" class="form-control" id="name" value="{{pdata.fname}} {{pdata.lname}}" name="name" aria-describedby="fname" placeholder="Enter Your Name" disabled required>
+    <small id="fname" class="form-text text-muted">Your informations are secure</small>
+  </div>
+  <div class="container-fluid row">
+  <div class="form-group col-lg-4 col-md-4 col-xs-6 col-sm-6">
+    <label for="exampleAge">Age</label>
+    <input type="number" class="form-control" value="{{pdata.age}}" id="age" name="age" aria-describedby="fname" placeholder="Your Age" min="0" max="130" required>
+  </div>
+  <div class="form-group col-lg-8 col-md-8 col-xs-6 col-sm-6">
+    <label for="exampleGender">Gender</label>
+    <input type="text" class="form-control" id="gender" value="{{pdata.sex}}" name="gender" aria-describedby="gender" placeholder="Gender" readonly required>
+    <small id="gender_small" class="form-text text-muted" style="margin-top: 0px;"><a class="nav-link" href="https://www.mydoctorspot.com/care/user_profile/user_profile_lite.php" style="padding-top: 3px;padding-left: 5px;padding-bottom: 3px;padding-right: 5px;">
+    Change/add gender</a></small>
+</div>
+  </div>
+  {% endfor %}
+  <div class="container-fluid row">
+  <div class="form-group col-lg-6 col-md-6 col-xs-6 col-sm-6">
+    <label for="exampleWeight">Heart rate</label>
+    <input type="number" class="form-control" value="{{pulse}}" id="bpm" min="1" max="200" step="0.01" name="HEARTRATE" aria-describedby="bpm" placeholder="Enter your Heart Rate" required>
+    <small id="weight" class="form-text text-muted"> in bpm</small>
+  </div>
+   <div class="form-group col-lg-6 col-md-6 col-xs-6 col-sm-6">
+    <label for="exampleHeight">Temperature</label>
+    <input type="number" class="form-control" value="{{temp}}" id="temp" min="1" max="200" step="0.01" name="TEMP" aria-describedby="temp" placeholder="Enter your Temperature" required>
+    <small id="height" class="form-text text-muted">in fahrenheit</small>
+  </div>
+ <div class="container-fluid row">
+    <div class="form-group col-lg-4 col-md-4 col-xs-4 col-sm-4">
+    <label for="examplefev1">SpO2</label>
+    <input type="number" class="form-control" value="{{sp}}" id="spo2" min="1" max="200" step="0.01" name="SP" aria-describedby="spo2" placeholder="Enter your SpO2 percentage" required>
+    <small id="height" class="form-text text-muted">in percentage</small>
+    </div>
+  <div class="form-group col-lg-6 col-md-6 col-xs-6 col-sm-6">
+    <label for="exampleDia">Respiratory Rate</label>
+    <input type="number" class="form-control" value="{{res}}" id="respir" min="1" max="200" step="0.01" name="RESPRATE" aria-describedby="" placeholder="Enter your Respiratory Rate" required>
+  </div>
+  </div>
+  <div class="container-fluid row">
+  <div class="form-group col-lg-6 col-md-6 col-xs-12 col-sm-12">
+    <label for="exampleDia">Systolic Blood Pressure</label>
+    <input type="number" class="form-control" value="{{sys}}" id="systolic" min="1" max="200" step="0.01" name="systolic" aria-describedby="" placeholder="Enter your Blood Pressure" required>
+  </div>
+  <div class="form-group col-lg-6 col-md-6 col-xs-12 col-sm-12">
+    <label for="exampleDia">Diastolic Blood Pressure</label>
+    <input type="number" class="form-control" value="{{dias}}" id="diastolic" min="1" max="200" step="0.01" name="diastolic" placeholder="Enter your Blood Pressure" required>
+  </div>
+  </div>
+  <div class="form-group col-lg-12 col-md-12 col-xs-12 col-sm-12">
+  {% if id %}
+    <button type="Submit" class="form-control btn btn-secondary" value="{{id}}" name="submit" id="submit">Submit</button>
+  {% endif %}
+  </div>
+  </div>
+</form>
+</div>
+</div>
+{% endblock  %} 
